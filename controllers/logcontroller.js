@@ -36,19 +36,69 @@ router.get("/", validateSession, async (req, res) => {
 
 
 router.get("/:id", validateSession, async (req, res) => {
-    const { id } = req.params;
+    const userId = req.user.id;
+    const logId = req.params.id
     try {
-        const logById = await LogModel.findAll({
+        const logByUser = await LogModel.findAll({
             where: {
-                id: id
+               owner_id: userId,
+                id: logId
             }
         });
-        res.status(200).json(logById);
+        res.status(200).json(logByUser);
     } catch (err) {
         res.status(500).json({ error: err });
     }
 });
 
+
+router.put("/:id", validateSession, async (req, res) => {
+    const { description, definition, result } = req.body;
+    const userId = req.user.id;
+    const logId = req.params.id;
+
+    const query = {
+        where: {
+                owner_id: userId,
+                id: logId
+                
+                
+            }
+    };
+    
+    const updatedLog = {
+        description: description,
+        definition: definition,
+        result: result
+    };
+    
+    try {
+        const update = await LogModel.update(updatedLog, query);
+        res.status(200).json(update);
+    } catch (err) {
+        res.status(500).json({ error: err })
+    }
+});
+
+router.delete("/:id", validateSession, async (req, res) => {
+    
+    const userId = req.user.id;
+    const logId = req.params.id;
+    
+    try {
+
+        const deletedLog = {
+            where : {
+                owner_id: userId,
+                id: logId
+            }
+        };
+        await LogModel.destroy(deletedLog);
+        res.status(200).json({ message: "Workout Log Removed"});
+    } catch (err) {
+        res.status(500).json({ error: err })
+    }
+});
 
 
 module.exports = router; 
