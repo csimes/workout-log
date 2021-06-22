@@ -20,97 +20,19 @@ router.post("/", validateSession, async (req, res)=> {
     }
 });
 
-
-
-router.get("/:id", validateSession, async (req, res) => {
+router.get("/", validateSession, async (req, res) => {
     const { id } = req.user;
     try {
-        const userJournals = await JournalModel.findAll({
+        const userLogs = await LogModel.findAll({
             where: {
                 owner_id: id
             }
         });
-        res.status(200).json(userJournals);
+        res.status(200).json(userLogs);
     } catch (err) {
         res.status(500).json({ error: err });
     }
 });
-
-
-/*
-=========================
-    Get Journals by Title
-=========================
- */
-
-router.get("/:title", async (req, res) => {
-    const { title } = req.params;
-    try {
-        const results = await JournalModel.findAll({
-            where: { title: title }
-        });
-        res.status(200).json(results);
-    } catch (err) {
-        res.status(500).json({ error: err });
-    }
-});
-
-/*
-=========================
-    Update a Journal
-=========================
- */
-
-router.put("/update/:entryId", validateSession, async (req, res) => {
-    const { title, date, entry } = req.body.journal;
-    const journalId = req.params.entryId;
-    const userId = req.user.id;
-
-    const query = {
-        where: {
-            id: journalId,
-            owner: userId
-        }
-    };
-    
-    const updatedJournal = {
-        title: title,
-        date: date,
-        entry: entry
-    };
-    
-    try {
-        const update = await JournalModel.update(updatedJournal, query);
-        res.status(200).json(update);
-    } catch (err) {
-        res.status(500).json({ error: err })
-    }
-});
-
-/*
-=========================
-    Delete a Journal
-=========================
- */
-
-router.delete("/delete/:id", validateSession, async (req, res) => {
-    const ownerId = req.user.id;
-    const journalId = req.params.id;
-    
-    try {
-        const query = {
-            where : {
-                id: journalId,
-                owner: ownerId
-            }
-        };
-        await JournalModel.destroy(query);
-        res.status(200).json({ message: "Journal Entry Removed"});
-    } catch (err) {
-        res.status(500).json({ error: err })
-    }
-});
-
 
 
 
