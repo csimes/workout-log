@@ -35,6 +35,20 @@ router.get("/", validateSession, async (req, res) => {
 });
 
 
+router.get("/:id", validateSession, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const logById = await LogModel.findAll({
+            where: {
+                id: id
+            }
+        });
+        res.status(200).json(logById);
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
+
 
 
 module.exports = router; 
