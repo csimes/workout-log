@@ -1,5 +1,5 @@
  # Workout Log Endpoints
- 
+ This is the server side to the Workout Log project. The repo for the client side can be found here: https://github.com/csimes/workout-log-client
  */user/register* Endpoint (POST) - Allows a new user to be created with a username and password.
  ![Image](./images/image1.png)
  
