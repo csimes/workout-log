@@ -4,7 +4,7 @@ let validateSession = require("../middleware/validate-session")
 const { LogModel } = require("../models")
 
 router.post("/", validateSession, async (req, res)=> {
-    const { description , definition, result } = req.body;
+    const { description , definition, result } = req.body.log;
     const { id } = req.user;
     const logEntry = {
         description,
@@ -41,7 +41,7 @@ router.get("/:id", validateSession, async (req, res) => {
     try {
         const logByUser = await LogModel.findAll({
             where: {
-               owner_id: userId,
+                owner_id: userId,
                 id: logId
             }
         });
@@ -53,7 +53,7 @@ router.get("/:id", validateSession, async (req, res) => {
 
 
 router.put("/:id", validateSession, async (req, res) => {
-    const { description, definition, result } = req.body;
+    const { description, definition, result } = req.body.log;
     const userId = req.user.id;
     const logId = req.params.id;
 
